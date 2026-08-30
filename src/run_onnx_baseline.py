@@ -57,6 +57,12 @@ def export_to_onnx(model: torch.nn.Module, onnx_path: str) -> None:
         output_names=["output"],
         dynamic_axes={"input": {0: "batch"}, "output": {0: "batch"}},
         opset_version=13,
+        # PyTorch >=2.5 defaults torch.onnx.export to a newer TorchDynamo-
+        # based exporter that requires the separate `onnxscript` package.
+        # dynamo=False pins to the older TorchScript-tracing exporter
+        # (the mechanics this module's docstring describes) so this runs
+        # with only what's already in requirements.txt.
+        dynamo=False,
     )
 
     # Sanity-check the exported graph is well-formed before trusting any
