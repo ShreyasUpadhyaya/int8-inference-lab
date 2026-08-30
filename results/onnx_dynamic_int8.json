@@ -1,0 +1,10 @@
+{
+  "config": "int8_dynamic_onnxruntime",
+  "device": "cpu",
+  "median_latency_ms": 40.17449650018534,
+  "p95_latency_ms": 77.30153624997911,
+  "num_warmup": 10,
+  "num_runs": 100,
+  "model_size_mb": 10.70608139038086,
+  "top1_accuracy": 94.14
+}

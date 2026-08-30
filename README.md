@@ -29,7 +29,7 @@ iterations.
 | INT8 dynamic | PyTorch | CPU | 11.915 | 13.341 | 42.69 | 94.14% | 0.00 pp |
 | INT8 static | PyTorch | CPU | 6.598 | 7.269 | 10.78 | 94.14% | 0.00 pp |
 | FP32 | ONNX Runtime | CPU | 11.674 | 12.549 | 42.62 | 94.14% | 0.00 pp |
-| INT8 dynamic | ONNX Runtime | CPU | TBD | TBD | TBD | TBD | TBD |
+| INT8 dynamic | ONNX Runtime | CPU | 40.174 | 77.302 | 10.71 | 94.14% | 0.00 pp |
 | INT8 static | ONNX Runtime | CPU | TBD | TBD | TBD | TBD | TBD |
 
 **Why there are two FP32-PyTorch rows:** PyTorch's eager-mode INT8
@@ -80,6 +80,28 @@ this baseline was worth measuring on its own before adding ONNX Runtime's
 INT8 paths (commits 9-10): without it, any ORT-INT8 speedup claim would
 be ambiguous about which effect -- runtime or precision -- it's actually
 crediting.
+
+**ONNX Runtime's dynamic quantization inverts the PyTorch story, and not
+in a good way.** Unlike PyTorch's `quantize_dynamic` (Linear layers
+only), ORT's default dynamic quantizer targets convolutions too --
+inspecting the exported graph's op types before/after shows all 20 `Conv`
+nodes converted to `ConvInteger`, alongside the `fc` layer's `Gemm`
+becoming `MatMulInteger`. So this genuinely quantizes the entire
+backbone, unlike its PyTorch counterpart. The result is **~3.4x *slower*
+than ORT's own FP32** (40.174ms vs 11.674ms median), with a p95
+(77.302ms) nearly double its own median -- real tail variance, not just a
+constant slowdown. Two things compound: `ConvInteger` is a much less
+optimized kernel than ORT's FP32 `Conv` (no fused, pre-scaled int8 path
+the way static quantization's `QLinearConv` gets), and every one of the
+20 conv layers now pays a `DynamicQuantizeLinear` (compute this call's
+activation min/max, quantize) plus a `Cast`+`Mul` (dequantize back to
+float) around it. Multiply dynamic quantization's per-call bookkeeping
+cost -- the same mechanism that made PyTorch's dynamic quant a wash on
+one layer -- by 20 conv layers, and it stops being a wash and starts
+being a real regression, despite an unchanged 94.14% accuracy and a
+genuine ~4x size reduction. This matches ONNX Runtime's own published
+guidance: dynamic quantization is aimed at RNN/Transformer models, and
+CNNs are specifically where they recommend static quantization instead.
 
 ## Setup
 
