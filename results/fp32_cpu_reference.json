@@ -1,10 +1,10 @@
 {
   "config": "fp32_pytorch_cpu_reference",
   "device": "cpu",
-  "median_latency_ms": 17.416221999837944,
-  "p95_latency_ms": 21.783816900097,
+  "median_latency_ms": 12.275222999960533,
+  "p95_latency_ms": 13.240617899896279,
   "num_warmup": 10,
   "num_runs": 100,
   "model_size_mb": 42.69965648651123,
-  "top1_accuracy": 93.96
+  "top1_accuracy": 94.14
 }

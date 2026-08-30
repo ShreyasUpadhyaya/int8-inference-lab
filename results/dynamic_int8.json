@@ -1,10 +1,10 @@
 {
   "config": "int8_dynamic_pytorch",
   "device": "cpu",
-  "median_latency_ms": 18.026353499863035,
-  "p95_latency_ms": 22.5420695999901,
+  "median_latency_ms": 11.915301999806616,
+  "p95_latency_ms": 13.340514999822517,
   "num_warmup": 10,
   "num_runs": 100,
   "model_size_mb": 42.685805320739746,
-  "top1_accuracy": 93.95
+  "top1_accuracy": 94.14
 }
