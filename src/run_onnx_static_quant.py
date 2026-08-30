@@ -26,6 +26,14 @@ Two things this script does that commit 9 didn't need to:
    its dedicated fused kernel directly (QLinearConv, QLinearAdd, ...) --
    the fused int8 kernel path commit 9 found ConvInteger was missing,
    which is what made dynamic quantization a regression there.
+3. activation_type=QuantType.QUInt8, set explicitly alongside
+   weight_type=QuantType.QInt8. This isn't optional on x64: ORT's fast
+   quantized CPU kernels are built around u8 activations x s8 weights
+   ("u8s8") using VNNI-style instructions. Leaving both at int8 ("s8s8")
+   with QOperator format falls back to a slow reference kernel -- ORT's
+   own quantizer warns about exactly this combination, and an earlier
+   run of this script (before this fix) confirmed it empirically: s8s8
+   landed *slower* than commit 9's dynamic-quant regression.
 
 Calibration data comes from CIFAR-10's *train* split, same reasoning as
 commit 6: calibrating on the test split would leak eval-set information
@@ -96,6 +104,7 @@ def main():
         model_output=QUANTIZED_ONNX_PATH,
         calibration_data_reader=calibration_reader,
         quant_format=QuantFormat.QOperator,
+        activation_type=QuantType.QUInt8,
         weight_type=QuantType.QInt8,
     )
 
