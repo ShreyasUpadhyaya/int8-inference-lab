@@ -43,36 +43,10 @@ from src.utils import set_seed
 
 CHECKPOINT_PATH = "checkpoints/resnet18_cifar10.pth"
 RESULTS_PATH = "results/dynamic_int8.json"
+FP32_CPU_REFERENCE_PATH = "results/fp32_cpu_reference.json"
 
 
-def main():
-    set_seed(42)
-    # Dynamic-quantized int8 kernels run through fbgemm/qnnpack, a CPU-only
-    # path -- there's no CUDA int8 GEMM being invoked here. So this always
-    # benchmarks on CPU, regardless of what device the FP32 baseline used.
-    # That means the dynamic-INT8 row and the FP32 row in the final table
-    # differ in hardware (CPU vs GPU) as well as precision -- worth calling
-    # out explicitly in the writeup rather than presenting it as a clean
-    # apples-to-apples precision comparison.
-    device = "cpu"
-
-    _, test_loader = get_cifar10_loaders()
-    fp32_model = load_checkpoint(CHECKPOINT_PATH, device=device)
-
-    linear_layers = [n for n, m in fp32_model.named_modules() if isinstance(m, nn.Linear)]
-    print(f"Layers targeted for dynamic quantization: {linear_layers}")
-
-    quantized_model = torch.quantization.quantize_dynamic(
-        fp32_model, {nn.Linear}, dtype=torch.qint8,
-    )
-
-    results = benchmark_model(
-        quantized_model,
-        test_loader,
-        config_name="int8_dynamic_pytorch",
-        device=device,
-    )
-
+def print_results(results: dict) -> None:
     print(f"config:          {results['config']}")
     print(f"device:          {results['device']}")
     print(f"median latency:  {results['median_latency_ms']:.3f} ms")
@@ -80,6 +54,49 @@ def main():
     print(f"model size:      {results['model_size_mb']:.2f} MB")
     print(f"top-1 accuracy:  {results['top1_accuracy']:.2f}%")
 
+
+def main():
+    set_seed(42)
+    # Dynamic-quantized int8 kernels run through fbgemm/qnnpack, a CPU-only
+    # path -- there's no CUDA int8 GEMM being invoked here. So this always
+    # benchmarks on CPU, regardless of what device the FP32 baseline used.
+    # That means the dynamic-INT8 row and results/baseline.json's FP32 row
+    # differ in hardware (CPU vs GPU) as well as precision. To keep that
+    # from muddying the quantization comparison, we also benchmark the
+    # *unquantized* model on CPU below, as a same-hardware reference point:
+    # the honest "what did INT8 buy me" comparison is dynamic-INT8-on-CPU
+    # vs FP32-on-CPU, not dynamic-INT8-on-CPU vs FP32-on-GPU.
+    device = "cpu"
+
+    _, test_loader = get_cifar10_loaders()
+    fp32_model = load_checkpoint(CHECKPOINT_PATH, device=device)
+
+    print("--- FP32 on CPU (same-hardware reference for the row below) ---")
+    fp32_cpu_results = benchmark_model(
+        fp32_model,
+        test_loader,
+        config_name="fp32_pytorch_cpu_reference",
+        device=device,
+    )
+    print_results(fp32_cpu_results)
+    save_results(fp32_cpu_results, FP32_CPU_REFERENCE_PATH)
+    print(f"-> saved to {FP32_CPU_REFERENCE_PATH}")
+
+    linear_layers = [n for n, m in fp32_model.named_modules() if isinstance(m, nn.Linear)]
+    print(f"\nLayers targeted for dynamic quantization: {linear_layers}")
+
+    quantized_model = torch.quantization.quantize_dynamic(
+        fp32_model, {nn.Linear}, dtype=torch.qint8,
+    )
+
+    print("--- INT8 dynamic on CPU ---")
+    results = benchmark_model(
+        quantized_model,
+        test_loader,
+        config_name="int8_dynamic_pytorch",
+        device=device,
+    )
+    print_results(results)
     save_results(results, RESULTS_PATH)
     print(f"-> saved to {RESULTS_PATH}")
 
