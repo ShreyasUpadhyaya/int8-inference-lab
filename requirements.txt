@@ -1,0 +1,11 @@
+# Colab's stock image already ships recent torch/torchvision/numpy.
+# Versions below are floors, not pins -- we care about API surface
+# (torch.quantization, onnxruntime.quantization), not exact patch versions.
+torch>=2.0
+torchvision>=0.15
+numpy>=1.23
+Pillow>=9.0
+
+# Day 2: ONNX export + ONNX Runtime quantization path
+onnx>=1.14
+onnxruntime>=1.16
