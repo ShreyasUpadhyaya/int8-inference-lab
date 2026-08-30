@@ -1,0 +1,10 @@
+{
+  "config": "fp32_pytorch",
+  "device": "cuda",
+  "median_latency_ms": 2.811410499816702,
+  "p95_latency_ms": 3.870422499721826,
+  "num_warmup": 10,
+  "num_runs": 100,
+  "model_size_mb": 42.70130443572998,
+  "top1_accuracy": 94.45
+}
