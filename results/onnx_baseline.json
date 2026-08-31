@@ -1,10 +1,10 @@
 {
   "config": "fp32_onnxruntime",
   "device": "cpu",
-  "median_latency_ms": 11.673510500031625,
-  "p95_latency_ms": 12.548921349980446,
+  "median_latency_ms": 11.438790500051255,
+  "p95_latency_ms": 13.167421349976394,
   "num_warmup": 10,
   "num_runs": 100,
   "model_size_mb": 42.61604690551758,
-  "top1_accuracy": 94.14
+  "top1_accuracy": 94.73
 }
