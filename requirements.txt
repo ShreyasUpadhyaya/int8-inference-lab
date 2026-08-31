@@ -9,3 +9,6 @@ Pillow>=9.0
 # Day 2: ONNX export + ONNX Runtime quantization path
 onnx>=1.14
 onnxruntime>=1.16
+
+# scripts/plot_results.py (local only -- not needed on Colab/Kaggle)
+matplotlib>=3.7
