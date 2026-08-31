@@ -1,0 +1,153 @@
+{
+  "baseline_top1_accuracy": 94.73,
+  "method": "per-channel symmetric int8 fake-quantization of one layer's weights at a time (all other layers FP32); accuracy_drop_pp = baseline_top1_accuracy - top1_accuracy for that run",
+  "results_sorted_by_sensitivity": [
+    {
+      "layer": "layer4.0.conv1",
+      "layer_type": "Conv2d",
+      "num_weights": 1179648,
+      "top1_accuracy": 94.68,
+      "accuracy_drop_pp": 0.04999999999999716
+    },
+    {
+      "layer": "layer3.0.conv2",
+      "layer_type": "Conv2d",
+      "num_weights": 589824,
+      "top1_accuracy": 94.69,
+      "accuracy_drop_pp": 0.04000000000000625
+    },
+    {
+      "layer": "conv1",
+      "layer_type": "Conv2d",
+      "num_weights": 1728,
+      "top1_accuracy": 94.7,
+      "accuracy_drop_pp": 0.030000000000001137
+    },
+    {
+      "layer": "layer1.1.conv1",
+      "layer_type": "Conv2d",
+      "num_weights": 36864,
+      "top1_accuracy": 94.7,
+      "accuracy_drop_pp": 0.030000000000001137
+    },
+    {
+      "layer": "layer2.1.conv1",
+      "layer_type": "Conv2d",
+      "num_weights": 147456,
+      "top1_accuracy": 94.7,
+      "accuracy_drop_pp": 0.030000000000001137
+    },
+    {
+      "layer": "layer4.1.conv1",
+      "layer_type": "Conv2d",
+      "num_weights": 2359296,
+      "top1_accuracy": 94.7,
+      "accuracy_drop_pp": 0.030000000000001137
+    },
+    {
+      "layer": "layer4.1.conv2",
+      "layer_type": "Conv2d",
+      "num_weights": 2359296,
+      "top1_accuracy": 94.7,
+      "accuracy_drop_pp": 0.030000000000001137
+    },
+    {
+      "layer": "layer1.0.conv1",
+      "layer_type": "Conv2d",
+      "num_weights": 36864,
+      "top1_accuracy": 94.71,
+      "accuracy_drop_pp": 0.020000000000010232
+    },
+    {
+      "layer": "layer1.1.conv2",
+      "layer_type": "Conv2d",
+      "num_weights": 36864,
+      "top1_accuracy": 94.71,
+      "accuracy_drop_pp": 0.020000000000010232
+    },
+    {
+      "layer": "layer2.0.conv1",
+      "layer_type": "Conv2d",
+      "num_weights": 73728,
+      "top1_accuracy": 94.72,
+      "accuracy_drop_pp": 0.010000000000005116
+    },
+    {
+      "layer": "layer2.1.conv2",
+      "layer_type": "Conv2d",
+      "num_weights": 147456,
+      "top1_accuracy": 94.72,
+      "accuracy_drop_pp": 0.010000000000005116
+    },
+    {
+      "layer": "layer3.1.conv1",
+      "layer_type": "Conv2d",
+      "num_weights": 589824,
+      "top1_accuracy": 94.72,
+      "accuracy_drop_pp": 0.010000000000005116
+    },
+    {
+      "layer": "layer4.0.conv2",
+      "layer_type": "Conv2d",
+      "num_weights": 2359296,
+      "top1_accuracy": 94.72,
+      "accuracy_drop_pp": 0.010000000000005116
+    },
+    {
+      "layer": "layer4.0.downsample.0",
+      "layer_type": "Conv2d",
+      "num_weights": 131072,
+      "top1_accuracy": 94.72,
+      "accuracy_drop_pp": 0.010000000000005116
+    },
+    {
+      "layer": "layer1.0.conv2",
+      "layer_type": "Conv2d",
+      "num_weights": 36864,
+      "top1_accuracy": 94.73,
+      "accuracy_drop_pp": 0.0
+    },
+    {
+      "layer": "layer2.0.downsample.0",
+      "layer_type": "Conv2d",
+      "num_weights": 8192,
+      "top1_accuracy": 94.73,
+      "accuracy_drop_pp": 0.0
+    },
+    {
+      "layer": "layer3.0.downsample.0",
+      "layer_type": "Conv2d",
+      "num_weights": 32768,
+      "top1_accuracy": 94.73,
+      "accuracy_drop_pp": 0.0
+    },
+    {
+      "layer": "layer2.0.conv2",
+      "layer_type": "Conv2d",
+      "num_weights": 147456,
+      "top1_accuracy": 94.74,
+      "accuracy_drop_pp": -0.009999999999990905
+    },
+    {
+      "layer": "layer3.0.conv1",
+      "layer_type": "Conv2d",
+      "num_weights": 294912,
+      "top1_accuracy": 94.74,
+      "accuracy_drop_pp": -0.009999999999990905
+    },
+    {
+      "layer": "layer3.1.conv2",
+      "layer_type": "Conv2d",
+      "num_weights": 589824,
+      "top1_accuracy": 94.74,
+      "accuracy_drop_pp": -0.009999999999990905
+    },
+    {
+      "layer": "fc",
+      "layer_type": "Linear",
+      "num_weights": 5120,
+      "top1_accuracy": 94.74,
+      "accuracy_drop_pp": -0.009999999999990905
+    }
+  ]
+}
